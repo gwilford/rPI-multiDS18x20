@@ -18,9 +18,8 @@ my @temp_readings;
 my %T_readings  = ();
 my $templateline = " --template ";
 my $updateline = " N:";
-my $path = "/home/pi/rPI-multiDS18x20/example/";
-my $commandline = "rrdtool updatev " . $path ."multirPItemp.rrd"; #change to match your file locations
-
+my $path = "/home/pi/rPI-multiDS18x20-master/";
+my $commandline = "rrdtool update " . $path ."multirPItemp.rrd"; #change to match your file locations
 
 for my $key ( keys %deviceIDs ) {
     my $ID = $deviceIDs{$key};
