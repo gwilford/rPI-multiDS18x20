@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 #made sure we've got the 1-wire modules loaded
-&check_modules;
+#&check_modules;
 
 #load up the device ID file.
 &get_device_IDs;
