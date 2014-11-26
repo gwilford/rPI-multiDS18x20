@@ -40,7 +40,7 @@ chop($updateline);
 $commandline .= $templateline;
 $commandline .= $updateline;
 print $commandline ."\n";
-system ($commandline);
+exec ($commandline);
 
 
 sub check_modules
