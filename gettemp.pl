@@ -20,6 +20,7 @@ for my $key ( keys %deviceIDs ) {
 	my $reading = read_device($deviceIDs{$key});
 	#$updateline = join(':', $updateline, $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
 	$rrd->update($key => $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
+	sleep(1);
 }
 
 #$templateline .= join(':', keys %deviceIDs);
