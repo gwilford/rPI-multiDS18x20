@@ -13,10 +13,12 @@ use vars qw(%deviceIDs %deviceCal $path);
 my $path = "/home/pi/rPI-multiDS18x20/";
 my $rrd = RRD::Simple->new( file => $path . "multirPItemp.rrd");
 
-for my $key ( keys %deviceIDs ) {
-	my $reading = read_device($deviceIDs{$key});
-	$rrd->update($key => $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
-	sleep(1);
+while (1) {
+	for my $key ( keys %deviceIDs ) {
+		my $reading = read_device($deviceIDs{$key});
+		$rrd->update($key => $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
+		sleep(1);
+	}
 }
 
 sub get_device_IDs {
