@@ -44,33 +44,27 @@ sub get_device_IDs {
 	close(INFILE);
 }
 
+sub read_device {
+	#takes one parameter - a device ID
+	#returns the temperature if we have something like valid conditions
+	#else we return "9999" for undefined
 
-
-
-sub read_device
-{
-    #takes one parameter - a device ID
-    #returns the temperature if we have something like valid conditions
-    #else we return "9999" for undefined
-
-    my $deviceID = $_[0];
-    $deviceID =~ s/\R//g;
+	my $deviceID = $_[0];
+	$deviceID =~ s/\R//g;
  
-    my $ret = 9999; # default to return 9999 (fail)
+	my $ret = 9999; # default to return 9999 (fail)
    
-    my $sensordata = `cat /sys/bus/w1/devices/${deviceID}/w1_slave 2>&1`;
-    #print "Read: $sensordata";
+	my $sensordata = `cat /sys/bus/w1/devices/${deviceID}/w1_slave 2>&1`;
+	#print "Read: $sensordata";
 
-
-   if(index($sensordata, 'YES') != -1) {
-      #fix for negative temps from http://habrahabr.ru/post/163575/
-      $sensordata =~ /t=(\D*\d+)/i;
-      #$sensor_temp =~ /t=(\d+)/i;
-      $sensordata = (($1/1000));
-      $ret = $sensordata;
-   } else {
-      print ("CRC Invalid for device $deviceID.\n");
-   }
-
-   return ($ret);
+	if(index($sensordata, 'YES') != -1) {
+		#fix for negative temps from http://habrahabr.ru/post/163575/
+		$sensordata =~ /t=(\D*\d+)/i;
+		#$sensor_temp =~ /t=(\d+)/i;
+		$sensordata = (($1/1000));
+		$ret = $sensordata;
+	} else {
+		print ("CRC Invalid for device $deviceID.\n");
+	}
+	return ($ret);
 }
