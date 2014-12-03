@@ -2,27 +2,29 @@
 
 use strict;
 use warnings;
+use RRD::Simple;
 
 #load up the device ID file.
 get_device_IDs();
 
 use vars qw(%deviceIDs %deviceCal $path);
 
-my $templateline = " --template ";
-my $updateline = " N";
+#my $templateline = " --template ";
+#my $updateline = " N";
 my $path = "/home/pi/rPI-multiDS18x20/";
-my $commandline = "rrdtool update " . $path ."multirPItemp.rrd"; #change to match your file locations
-
+#my $commandline = "rrdtool update " . $path ."multirPItemp.rrd"; #change to match your file locations
+my $rrd = RRD::Simple->new( file => $path . "multirPItemp.rrd");
 
 for my $key ( keys %deviceIDs ) {
 	my $reading = read_device($deviceIDs{$key});
-	$updateline = join(':', $updateline, $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
+	#$updateline = join(':', $updateline, $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
+	$rrd->update($key => $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
 }
 
-$templateline .= join(':', keys %deviceIDs);
-$commandline .= $templateline . $updateline;
-print $commandline ."\n";
-system ($commandline);
+#$templateline .= join(':', keys %deviceIDs);
+#$commandline .= $templateline . $updateline;
+#print $commandline ."\n";
+#system ($commandline);
 
 sub get_device_IDs {
 	# If you've run detect.pl before, sensors.conf should be a CSV file containing a list of indicies and deviceIDs
