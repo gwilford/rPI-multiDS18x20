@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use lib "/home/pi/perl5/lib/perl5";
 use RRD::Simple;
 
 #load up the device ID file.
