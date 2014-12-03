@@ -18,11 +18,11 @@ my $rrd = RRD::Simple->new( file => $path . "multirPItemp.rrd");
 while (1) {
 	for my $key ( keys %deviceIDs ) {
 		my $reading = read_device($key);
-		my $temp = $reading != 9999 ? $reading + $deviceCal{$key} : 'U';
-		$rrd->update($key => $temp);
-		print "$key: $temp\n";
-		sleep(1);
+		my $temp{$key} = $reading != 9999 ? $reading + $deviceCal{$key} : 'U';
+		print "$key: $temp{$key}\n";
 	}
+	$rrd->update(map { ($_ => %temp{$_}) } keys %deviceIDs);
+	sleep(1);
 }
 
 sub get_device_IDs {
