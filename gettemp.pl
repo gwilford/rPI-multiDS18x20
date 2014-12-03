@@ -18,7 +18,7 @@ my @temp_readings;
 my %T_readings  = ();
 my $templateline = " --template ";
 my $updateline = " N:";
-my $path = "/home/pi/rPI-multiDS18x20-master/";
+my $path = "/home/pi/rPI-multiDS18x20/";
 my $commandline = "rrdtool update " . $path ."multirPItemp.rrd"; #change to match your file locations
 
 
