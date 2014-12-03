@@ -21,6 +21,7 @@ my $updateline = " N:";
 my $path = "/home/pi/rPI-multiDS18x20-master/";
 my $commandline = "rrdtool update " . $path ."multirPItemp.rrd"; #change to match your file locations
 
+
 for my $key ( keys %deviceIDs ) {
     my $ID = $deviceIDs{$key};
     $reading = &read_device($ID);
@@ -40,7 +41,7 @@ chop($updateline);
 $commandline .= $templateline;
 $commandline .= $updateline;
 print $commandline ."\n";
-exec ($commandline);
+system ($commandline);
 
 
 sub check_modules

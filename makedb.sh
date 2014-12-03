@@ -1,9 +1,12 @@
 #!/bin/bash
-rrdtool create multirPItemp.rrd  --step 300 \
-DS:in_temp:GAUGE:600:-30:50 \
-DS:out_temp:GAUGE:600:-30:50 \
-RRA:AVERAGE:0.5:1:12 \
-RRA:AVERAGE:0.5:1:288 \
-RRA:AVERAGE:0.5:12:168 \
-RRA:AVERAGE:0.5:12:720 \
-RRA:AVERAGE:0.5:288:365
+rrdtool create multirPItemp.rrd  --step 60 \
+DS:ambient:GAUGE:600:0:100 \
+DS:mid-level:GAUGE:600:0:100 \
+DS:high-level:GAUGE:600:0:100 \
+DS:boiler_flow:GAUGE:600:0:100 \
+DS:coil:GAUGE:600:0:100 \
+RRA:AVERAGE:0.5:1:60 \
+RRA:AVERAGE:0.5:1:1440 \
+RRA:AVERAGE:0.5:60:840 \
+RRA:AVERAGE:0.5:60:3600 \
+RRA:AVERAGE:0.5:1440:1825
