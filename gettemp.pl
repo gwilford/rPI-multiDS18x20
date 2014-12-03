@@ -7,8 +7,9 @@ use RRD::Simple;
 
 #load up the device ID file.
 get_device_IDs();
+open_devices();
 
-use vars qw(%deviceIDs %deviceCal $path);
+use vars qw(%deviceIDs %deviceCal $path %fhandle);
 
 my $path = "/home/pi/rPI-multiDS18x20/";
 my $rrd = RRD::Simple->new( file => $path . "multirPItemp.rrd");
@@ -38,6 +39,13 @@ sub get_device_IDs {
 	close(INFILE);
 }
 
+sub open_devices {
+	for my $key ( keys %deviceIDs ) {
+		open ($fhandle{$key}, "<", "/sys/bus/w1/devices/" . $deviceIDs{$key} . "/w1_slave") 
+			or die "cannot open < ${deviceID}: $!";
+	}
+}
+
 sub read_device {
 	#takes one parameter - a device ID
 	#returns the temperature if we have something like valid conditions
@@ -48,8 +56,11 @@ sub read_device {
  
 	my $ret = 9999; # default to return 9999 (fail)
    
-	my $sensordata = `cat /sys/bus/w1/devices/${deviceID}/w1_slave 2>&1`;
-	#print "Read: $sensordata";
+	seek($fhandle{$key}, 0, 0);
+	my $sensordata = <$fhandle{$key}> . <$fhandle{$key}>;
+
+	#my $sensordata = `cat /sys/bus/w1/devices/${deviceID}/w1_slave 2>&1`;
+	print "Read: $sensordata";
 
 	if(index($sensordata, 'YES') != -1) {
 		#fix for negative temps from http://habrahabr.ru/post/163575/
