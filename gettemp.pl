@@ -9,7 +9,7 @@ get_device_IDs();
 use vars qw(%deviceIDs %deviceCal $path);
 
 my $templateline = " --template ";
-my $updateline = " N:";
+my $updateline = " N";
 my $path = "/home/pi/rPI-multiDS18x20/";
 my $commandline = "rrdtool update " . $path ."multirPItemp.rrd"; #change to match your file locations
 
