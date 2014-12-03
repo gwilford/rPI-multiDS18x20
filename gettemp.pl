@@ -18,8 +18,8 @@ my $commandline = "rrdtool update " . $path ."multirPItemp.rrd"; #change to matc
 
 
 for my $key ( keys %deviceIDs ) {
-    $reading = read_device($deviceIDs{$key});
-    $updateline = join(':', $updateline, $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
+	$reading = read_device($deviceIDs{$key});
+	$updateline = join(':', $updateline, $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
 }
 
 $templateline .= join(':', keys %deviceIDs);
