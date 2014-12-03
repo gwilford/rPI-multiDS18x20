@@ -8,9 +8,6 @@ get_device_IDs();
 
 use vars qw(%deviceIDs %deviceCal $path);
 
-my $reading = -1;
-my $device = -1;
-#my @deviceIDs;
 my $templateline = " --template ";
 my $updateline = " N:";
 my $path = "/home/pi/rPI-multiDS18x20/";
@@ -18,7 +15,7 @@ my $commandline = "rrdtool update " . $path ."multirPItemp.rrd"; #change to matc
 
 
 for my $key ( keys %deviceIDs ) {
-	$reading = read_device($deviceIDs{$key});
+	my $reading = read_device($deviceIDs{$key});
 	$updateline = join(':', $updateline, $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
 }
 
