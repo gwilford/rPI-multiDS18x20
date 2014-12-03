@@ -14,6 +14,7 @@ use vars qw(%deviceIDs %deviceCal $path %fhandle);
 my $path = "/home/pi/rPI-multiDS18x20/";
 my $rrd = RRD::Simple->new( file => $path . "multirPItemp.rrd");
 
+# Loop forever, sleeping at least 1s per loop
 while (1) {
 	for my $key ( keys %deviceIDs ) {
 		my $reading = read_device($key);
@@ -48,22 +49,16 @@ sub open_devices {
 }
 
 sub read_device {
-	#takes one parameter - a device ID
 	#returns the temperature if we have something like valid conditions
 	#else we return "9999" for undefined
 
 	my $key = $_[0];
-	#my $deviceID = $_[0];
-	#$deviceID =~ s/\R//g;
- 
 	my $ret = 9999; # default to return 9999 (fail)
   	my $fh = $fhandle{$key};
+	# reset the w1 sys file for reading
 	seek($fh, 0, 0);
 	local $/;
 	my $sensordata = <$fh>;
-
-	#my $sensordata = `cat /sys/bus/w1/devices/${deviceID}/w1_slave 2>&1`;
-	#print "Read: $sensordata";
 
 	if(index($sensordata, 'YES') != -1) {
 		#fix for negative temps from http://habrahabr.ru/post/163575/
