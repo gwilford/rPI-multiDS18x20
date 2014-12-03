@@ -1,18 +1,16 @@
 #!/usr/bin/perl
+
 use strict;
 use warnings;
 
 #load up the device ID file.
-&get_device_IDs;
+get_device_IDs();
 
 use vars qw(%deviceIDs %deviceCal $path);
 
-my $count = 0;
 my $reading = -1;
 my $device = -1;
 #my @deviceIDs;
-my @temp_readings;
-my %T_readings  = ();
 my $templateline = " --template ";
 my $updateline = " N:";
 my $path = "/home/pi/rPI-multiDS18x20/";
@@ -29,24 +27,21 @@ $commandline .= $templateline . $updateline;
 print $commandline ."\n";
 system ($commandline);
 
-sub get_device_IDs
-{
-# If you've run detect.pl before, sensors.conf should be a CSV file containing a list of indicies and deviceIDs
-# Pull them into a hash here for processing later
+sub get_device_IDs {
+	# If you've run detect.pl before, sensors.conf should be a CSV file containing a list of indicies and deviceIDs
+	# Pull them into a hash here for processing later
 
-# open file
-open(INFILE, "sensors.conf") or die("Unable to open file");
+	# open file
+	open(INFILE, "sensors.conf") or die("Unable to open file");
 
-while(<INFILE>)
-{
-	chomp;
-	(my $index, my $cal, my $ID) = split(/,/);
-	$index =~ s/\s*$//g;
-	$deviceIDs{$index} = $ID;
-	$deviceCal{$index} = $cal;
-}
-
-close(INFILE);
+	while(<INFILE>) {
+		chomp;
+		(my $index, my $cal, my $ID) = split(/,/);
+		$index =~ s/\s*$//g;
+		$deviceIDs{$index} = $ID;
+		$deviceCal{$index} = $cal;
+	}
+	close(INFILE);
 }
 
 
