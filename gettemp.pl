@@ -20,22 +20,12 @@ my $commandline = "rrdtool update " . $path ."multirPItemp.rrd"; #change to matc
 
 
 for my $key ( keys %deviceIDs ) {
-    my $ID = $deviceIDs{$key};
-    $reading = &read_device($ID);
-    if ($reading == 9999) {
-       $reading = "U";
-    }
-    $T_readings{$key} = $reading + $deviceCal{$key};
-    $updateline .= $T_readings{$key} . ":";
-    }
+    $reading = read_device($deviceIDs{$key});
+    $updateline = join(':', $updateline, $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
+}
 
 $templateline .= join(':', keys %deviceIDs);
-
-#ditch extra ":" that makes rrdtool fail
-chop($updateline);
-
-$commandline .= $templateline;
-$commandline .= $updateline;
+$commandline .= $templateline . $updateline;
 print $commandline ."\n";
 system ($commandline);
 
