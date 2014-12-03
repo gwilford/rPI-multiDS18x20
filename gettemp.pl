@@ -16,7 +16,7 @@ my $rrd = RRD::Simple->new( file => $path . "multirPItemp.rrd");
 
 while (1) {
 	for my $key ( keys %deviceIDs ) {
-		my $reading = read_device($deviceIDs{$key});
+		my $reading = read_device($key);
 		$rrd->update($key => $reading != 9999 ? $reading + $deviceCal{$key} : 'U');
 		sleep(1);
 	}
@@ -41,8 +41,9 @@ sub get_device_IDs {
 
 sub open_devices {
 	for my $key ( keys %deviceIDs ) {
-		open ($fhandle{$key}, "<", "/sys/bus/w1/devices/" . $deviceIDs{$key} . "/w1_slave") 
-			or die "cannot open < ${deviceID}: $!";
+		open (my $fh, "<", "/sys/bus/w1/devices/" . $deviceIDs{$key} . "/w1_slave") 
+			or die "cannot open < $deviceIDs{$key}: $!";
+		$fhandle{$key} = $fh;
 	}
 }
 
@@ -51,16 +52,18 @@ sub read_device {
 	#returns the temperature if we have something like valid conditions
 	#else we return "9999" for undefined
 
-	my $deviceID = $_[0];
-	$deviceID =~ s/\R//g;
+	my $key = $_[0];
+	#my $deviceID = $_[0];
+	#$deviceID =~ s/\R//g;
  
 	my $ret = 9999; # default to return 9999 (fail)
-   
-	seek($fhandle{$key}, 0, 0);
-	my $sensordata = <$fhandle{$key}> . <$fhandle{$key}>;
+  	my $fh = $fhandle{$key};
+	seek($fh, 0, 0);
+	local $/;
+	my $sensordata = <$fh>;
 
 	#my $sensordata = `cat /sys/bus/w1/devices/${deviceID}/w1_slave 2>&1`;
-	print "Read: $sensordata";
+	#print "Read: $sensordata";
 
 	if(index($sensordata, 'YES') != -1) {
 		#fix for negative temps from http://habrahabr.ru/post/163575/
@@ -68,7 +71,7 @@ sub read_device {
 		$sensordata = (($1/1000));
 		$ret = $sensordata;
 	} else {
-		print ("CRC Invalid for device $deviceID.\n");
+		print ("CRC Invalid for device $key.\n");
 	}
 	return ($ret);
 }
