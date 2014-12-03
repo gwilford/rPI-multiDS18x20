@@ -26,13 +26,12 @@ for my $key ( keys %deviceIDs ) {
        $reading = "U";
     }
     $T_readings{$key} = $reading + $deviceCal{$key};
-    $templateline .= $key;
-    $templateline .= ":";
     $updateline .= $T_readings{$key} . ":";
     }
 
+$templateline .= join(':', keys %deviceIDs);
+
 #ditch extra ":" that makes rrdtool fail
-chop($templateline);
 chop($updateline);
 
 $commandline .= $templateline;
