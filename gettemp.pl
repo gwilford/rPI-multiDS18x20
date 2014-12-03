@@ -2,9 +2,6 @@
 use strict;
 use warnings;
 
-#made sure we've got the 1-wire modules loaded
-#&check_modules;
-
 #load up the device ID file.
 &get_device_IDs;
 
@@ -42,25 +39,6 @@ $commandline .= $templateline;
 $commandline .= $updateline;
 print $commandline ."\n";
 system ($commandline);
-
-
-sub check_modules
-{
-   my $mods = `cat /proc/modules`;
-if ($mods =~ /w1_gpio/ && $mods =~ /w1_therm/)
-{
- #print "w1 modules already loaded \n";
-}
-else 
-{
-print "loading w1 modules \n";
-	`sudo modprobe wire`;
-    `sudo modprobe w1-gpio`;
-    `sudo modprobe w1-therm`;
-} 
-}
-
-
 
 sub get_device_IDs
 {
